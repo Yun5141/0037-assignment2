@@ -1,7 +1,13 @@
 \BOOKMARK [1][-]{section.1}{Introduction [dai ding]}{}% 1
 \BOOKMARK [1][-]{section.2}{Effect of Vehicle Drive Speed [Yusi]}{}% 2
 \BOOKMARK [1][-]{section.3}{Reactive Planner [Yun]}{}% 3
-\BOOKMARK [1][-]{section.4}{Frontier-Based Exploration System [Yun]}{}% 4
-\BOOKMARK [1][-]{section.5}{Integration of the Planner and the Exploration System [Yun]}{}% 5
-\BOOKMARK [1][-]{section.6}{Information-Theoretic Path Planning [Yusi]}{}% 6
-\BOOKMARK [1][-]{section.7}{Conclusion [dai ding]}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Definition of Reactive Planning System}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Implementation of Our Reactive Planning System}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Approach for Improving the Performance}{section.3}% 6
+\BOOKMARK [1][-]{section.4}{Frontier-Based Exploration System [Yun]}{}% 7
+\BOOKMARK [2][-]{subsection.4.1}{Frontiers}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.2}{The Exploration Algorithm Provided}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.3}{Our Implementation}{section.4}% 10
+\BOOKMARK [1][-]{section.5}{Integration of Our Planner and Exploration System [Yun]}{}% 11
+\BOOKMARK [1][-]{section.6}{Information-Theoretic Path Planning [Yusi]}{}% 12
+\BOOKMARK [1][-]{section.7}{Conclusion [dai ding]}{}% 13
