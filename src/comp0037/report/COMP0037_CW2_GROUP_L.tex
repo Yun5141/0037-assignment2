@@ -52,6 +52,11 @@
 
 \subsection {Frontiers}
 
+A frontier is a cell which its state is known while it is adjacent to a cell whose state is not known. Frontier cells define boundary between open space and the uncharted territory. In frontier-based exploration, the robot moves to the boundary to gain the newest information about the world.
+
+Two methods for identifying frontiers are wave front detection and fast frontier detection.The wave front detection explores the map based on the map that has already been explored. It searches the frontiers using depth-first search, starting from the robot initial location. Once a cell is encountered that looks like a frontier, it pauses the search and traces along all the frontier cells. The latter relies on the newly collected sensor information. The sensor data is used to create a contour, which then be separated into frontier and non-frontier segments. The frontier segments are managed in a database to make them persistent. When data becomes available, the frontiers will be split or merged deleted. One heuristic for choosing next waypoint is picking the closest frontier to the robot. Another one is picking the largest frontier cell.
+
+
 \subsection {The Exploration Algorithm Provided}
 
 \subsection {Our Implementation}
