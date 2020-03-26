@@ -19,6 +19,7 @@
 \usepackage{subfigure}
 
 
+
 \title{COMP0037 ASSIGNMENT 2}
 
 
@@ -40,12 +41,65 @@
 
 % -------------------------------------------------------------------------------------------
 \section{Reactive Planner [Yun]}
+% -----------
+\subsection {Reactive Planning System}
 
-\subsection {Definition of Reactive Planning System}
+A reactive planning system works like that: The planner makes a trajectory using the latest world model and the free space assumption. And the robot constantly perceives the environment and updates the world map as it moves. When the original path has become blocked by an obstacle, it reacts by planning a new set of actions and plans. See the block diagram in Fig. \ref {fig:reactivePlanningSystem}.
 
-\subsection {Implementation of Our Reactive Planning System}
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{graphs/part1/reactivePlanningSystem.PNG}
+\caption{Reactive Planning System}
+\label{fig:reactivePlanningSystem}
+\end{figure}
 
+% -----------
+\subsection {Our Implementation}
+
+We implement the reactive planning system by complete the function \textit{checkIfCurrentPathIsStillGood} in the \textit{ReactivePlannerContoller.py}. The code is shown in Fig. \ref{fig:code}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.6]{graphs/part1/code.PNG}
+\caption{}
+\label{fig:code}
+\end{figure}
+
+The result is shown in Fig.\ref{fig:result1} and Fig.\ref{fig:result2}.
+
+\begin{figure}[H]
+\centering  
+\subfigure[STDR GUI]{
+\includegraphics[width=0.45\textwidth]{graphs/part1/1-1/GUI.png}}
+\subfigure[Planner Occupancy Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part1/1-1/plannerOG.png}}
+\subfigure[Planner Search Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part1/1-1/plannerSG.png}}
+\subfigure[Mapper Node Occupancy Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part1/1-1/mapperNodeOG.png}}
+\caption{Result on the first launch script}
+\label{fig:result1}
+\end{figure}
+
+\begin{figure}[H]
+\centering  
+\subfigure[STDR GUI]{
+\includegraphics[width=0.45\textwidth]{graphs/part1/1-2/GUI.png}}
+\subfigure[Planner Occupancy Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part1/1-2/plannerOG.png}}
+\subfigure[Planner Search Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part1/1-2/plannerSG.png}}
+\subfigure[Mapper Node Occupancy Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part1/1-2/mapperNodeOG.png}}
+\caption{Result on the second launch script}
+\label{fig:result2}
+\end{figure}
+
+% -----------
 \subsection {Approach for Improving the Performance}
+
+One approach for improving the performance is using a more efficient global planner to reduce the computational cost associated with re-planning. D*-Lite is one such algorithm that caches previous searches and update them only when we need to. It make use of the backwards search. The graph additionally contains a consistency condition. When the graph changes, such as due to an obstacle, the consistency condition is violated. A priority queue is then used to sort the effect of the failed condition on the path. The highest priority updates are committed first.
+
 
 % -------------------------------------------------------------------------------------------
 \section{Frontier-Based Exploration System [Yun]}

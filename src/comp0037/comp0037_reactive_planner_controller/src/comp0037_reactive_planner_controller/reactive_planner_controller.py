@@ -43,8 +43,6 @@ class ReactivePlannerController(PlannerControllerBase):
             if self.planner.searchGrid.getCellFromCoords(waypoint.coords).label == CellLabel.OBSTRUCTED:
                 self.controller.stopDrivingToCurrentGoal()
 
-
-        pass
     
     def driveToGoal(self, goal):
 
