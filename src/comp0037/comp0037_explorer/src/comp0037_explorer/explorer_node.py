@@ -16,8 +16,6 @@ class ExplorerNode(ExplorerNodeBase):
         pass
 
     def chooseNewDestination(self):
-
-
 #         print 'blackList:'
 #         for coords in self.blackList:
 #             print str(coords)

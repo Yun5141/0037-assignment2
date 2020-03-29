@@ -9,6 +9,7 @@ from comp0037_reactive_planner_controller.occupancy_grid import OccupancyGrid
 from comp0037_reactive_planner_controller.grid_drawer import OccupancyGridDrawer
 from geometry_msgs.msg  import Twist
 
+
 class ExplorerNodeBase(object):
 
     def __init__(self):
@@ -52,6 +53,11 @@ class ExplorerNodeBase(object):
             mapUpdate = mapRequestService(True)
             
         self.mapUpdateCallback(mapUpdate.initialMapUpdate)
+
+
+        # Part 2.2
+        self.startT = rospy.get_time()
+
         
     def mapUpdateCallback(self, msg):
         rospy.loginfo("map update received")
@@ -161,7 +167,8 @@ class ExplorerNodeBase(object):
         velocityMessage = Twist()
         velocityPublisher.publish(velocityMessage)
         rospy.sleep(1)
-            
+
+    
     class ExplorerThread(threading.Thread):
         def __init__(self, explorer):
             threading.Thread.__init__(self)
@@ -169,13 +176,12 @@ class ExplorerNodeBase(object):
             self.running = False
             self.completed = False;
 
-
         def isRunning(self):
             return self.running
 
         def hasCompleted(self):
             return self.completed
-
+             
         def run(self):
 
             self.running = True
@@ -185,7 +191,6 @@ class ExplorerNodeBase(object):
                 # Special case. If this is the first time everything
                 # has started, stdr needs a kicking to generate laser
                 # messages. To do this, we get the robot to
-                
 
                 # Create a new robot waypoint if required
                 newDestinationAvailable, newDestination = self.explorer.chooseNewDestination()
@@ -198,7 +203,27 @@ class ExplorerNodeBase(object):
                     self.explorer.destinationReached(newDestination, attempt)
                 else:
                     self.completed = True
-                    
+            
+              
+    # Part 2.2 
+    def getCoverage(self):
+        
+        width, height = self.occupancyGrid.getWidthInCells(), \
+            self.occupancyGrid.getHeightInCells()
+        
+        overallSize = width * height
+        cellMatrix = [[x,y] for x in range(0, width) for y in range(0, height)]
+        unCheckedCellNum = len(filter(lambda cellCoords : 
+                                        self.checkIfCellIsUnknown(cellCoords[0],cellCoords[1],0,0),
+                                    cellMatrix))
+        
+        return (1 - float(unCheckedCellNum) / overallSize) * 100
+
+    def outputData(self):
+        # output data
+        rospy.loginfo("Explorer finished\n")
+        rospy.loginfo("Time used: %f", rospy.get_time() - self.startT); # in float seconds
+        rospy.loginfo("Coverage: %.4f%%", self.getCoverage())    
        
     def run(self):
 
@@ -221,6 +246,10 @@ class ExplorerNodeBase(object):
             if explorerThread.hasCompleted() is True:
                 explorerThread.join()
                 keepRunning = False
+
+        # Part 2.2
+        self.outputData() 
+
 
             
             
