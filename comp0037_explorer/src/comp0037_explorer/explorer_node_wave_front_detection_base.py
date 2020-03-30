@@ -6,7 +6,8 @@ from nav_msgs.msg import Odometry
 
 # Part 2.3
 
-# This class is a base class implementing the wave front detection.
+# This class is a base class implementing the wave front detection
+# refering the seudocode in the suggested paper 'Frontier Based Exploration for Autonomous Robot'
 class ExplorerNodeDetectionBase(ExplorerNodeBase):
 
     def __init__(self):
@@ -30,6 +31,7 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
 
         pose = data.pose.pose
         pos = pose.position
+        
         try:
             self.occupancyGrid
         except AttributesError:
@@ -46,23 +48,8 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
 
     # ------------------------------------
     def clearOldFrontierInfo(self):
-        self.frontierList = [] 
-        self.visitedList = []
-        self.visitedFrontierList = []
-
-
-    def hasEmptyNeighbours(self, cell):
-        for neighbour in self.getNeighbours(cell):
-            x, y = neighbour
-            if not 0 <= x < self.occupancyGrid.getWidthInCells() or not 0 <= y < self.occupancyGrid.getHeightInCells(): # out of range
-                return False
-            if self.occupancyGrid.getCell(x,y) == 0:
-                return True
-        '''
-        l = self.getNeighbours(cell)
-        l = map(lambda x : self.isEmptyCell(x) and self.isInBoundary(x), l)
-        return sum(l)==len(l)
-        '''
+        rospy.loginfo("Clearing old frontier info")
+        self.frontierList = []
 
     def isInBoundary(self, cell):
         width, height = self.occupancyGrid.getWidthInCells(), self.occupancyGrid.getHeightInCells()
@@ -82,58 +69,74 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
         rospy.loginfo("Searching frontiers")
 
         # init
-        currentCell = searchStartCell 
-        waitingList = [searchStartCell] 
-        visitedList = []  # map_close
+        qM = []
+        mapCloseList = []
+        mapOpenList = []
 
-        while len(waitingList) != 0:
+        qF = []
+        newFrontier = []
+        frontierOpenList = []
+        frontierCloseList = []
 
-            currentCell = waitingList.pop(-1)
+        qM = [searchStartCell]
+        while len(qM) != 0:
 
-            if currentCell in visitedList or currentCell in self.blackList:
+            p = qM.pop(0)
+
+            if p in mapCloseList or p in self.blackList:
                 continue
 
             # found a frontier
-            if self.isFrontierCell(currentCell[0], currentCell[1]):
+            if self.isFrontierCell(p[0], p[1]):
 
                 # init to trace along the frontiers
-                currentPotentialFrontier = currentCell
-                waitingPotentialFrontierList = [currentCell] 
-                visitedFrontierList = []
+                qF = []
+                newFrontier = []
+                qF.append(p)
+                frontierOpenList.append(p)
 
-                while len(waitingPotentialFrontierList) != 0:
+                while len(qF) != 0:
                     
-                    currentPotentialFrontier = waitingPotentialFrontierList.pop(-1)
+                    q = qF.pop(0)
                     
-                    if currentPotentialFrontier in visitedList or \
-                        currentPotentialFrontier in visitedFrontierList or \
-                        currentPotentialFrontier in self.blackList:
+                    if q in mapCloseList or q in frontierCloseList or q in self.blackList:
                         continue
                     
-                    if self.isFrontierCell(currentPotentialFrontier[0], currentPotentialFrontier[1]):
+                    if self.isFrontierCell(q[0], q[1]):
                         
-                        frontierList.append(currentPotentialFrontier)
+                        newFrontier.append(q)
 
-                        for neighbours in self.getNeighbours(currentPotentialFrontier):
-                            if neighbours not in visitedList and neighbours not in visitedFrontierList:
-                                waitingPotentialFrontierList.append(neighbours)
+                        for w in self.getNeighbours(q):
+                            if w not in frontierOpenList and w not in frontierCloseList \
+                                    and w not in mapCloseList:
+                                qF.append(w)
+                                frontierOpenList.append(w)
                     
-                    visitedFrontierList.append(currentPotentialFrontier)
-                visitedList += visitedFrontierList
+                    frontierCloseList.append(q)
+                frontierList += newFrontier
+                mapCloseList += newFrontier
 
             # add target neighbours into waiting list
-            for neighbours in self.getNeighbours(currentCell):
-                if neighbours not in waitingList and neighbours not in visitedList \
-                                and self.hasEmptyNeighbours(neighbours):  
-                    waitingList.append(neighbours)
-
-            visitedList.append(currentCell)
+            for v in self.getNeighbours(p):
+                if v not in mapOpenList and v not in mapCloseList \
+                                and self.hasAtLeastOneOpenNeighbours(v):  
+                    qM.append(v)
+                    mapOpenList.append(v)
+            mapCloseList.append(p)
 
         return frontierList
+    
+    def hasAtLeastOneOpenNeighbours(self, cell):
 
-    def checkIfCellInvalid(self,cell):
-        return self.isInBoundary(cell) and \
-            cell not in self.blackList
+        for neighbours in self.getNeighbours(cell):
+            if self.isInBoundary(neighbours) and self.isEmptyCell(neighbours):
+                return True
+        '''
+        l = self.getNeighbours(cell)
+        if len(l) > 0:
+            l = map(lambda x : self.isInBoundary(x) and self.isEmptyCell(x), l)
+            return sum(l) == len(l)
+        '''
 
     def isEmptyCell(self, cell):
         return self.occupancyGrid.getCell(cell[0], cell[1]) == 0.0

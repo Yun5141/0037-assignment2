@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <param name="use_sim_time" type="bool" value="true" />
+    <param name="use_reactive_planner_controller" type="bool" value="false" />
     <param name="enable_change_mapper_state" type="bool" value="true" />
     <param name="remove_goal_cell_from_path_if_occupied" type="bool" value="false" />
     <param name="use_search_grid_to_validate_start_and_end" type="bool" value="false" />
