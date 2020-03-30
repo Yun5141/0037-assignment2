@@ -40,7 +40,7 @@
 \section{Introduction [dai ding]} 
 
 % -------------------------------------------------------------------------------------------
-\section{Reactive Planner [Yun]}
+\section{Reactive Planner}
 % -----------
 \subsection {Reactive Planning System}
 
@@ -102,25 +102,66 @@ One approach for improving the performance is using a more efficient global plan
 
 
 % -------------------------------------------------------------------------------------------
-\section{Frontier-Based Exploration System [Yun]}
-
+\section{Frontier-Based Exploration System}
+% ----------------
 \subsection {Frontiers}
 
 A frontier is a cell which its state is known while it is adjacent to a cell whose state is not known. Frontier cells define boundary between open space and the uncharted territory. In frontier-based exploration, the robot moves to the boundary to gain the newest information about the world.
 
 Two methods for identifying frontiers are wave front detection and fast frontier detection.The wave front detection explores the map based on the map that has already been explored. It searches the frontiers using depth-first search, starting from the robot initial location. Once a cell is encountered that looks like a frontier, it pauses the search and traces along all the frontier cells. The latter relies on the newly collected sensor information. The sensor data is used to create a contour, which then be separated into frontier and non-frontier segments. The frontier segments are managed in a database to make them persistent. When data becomes available, the frontiers will be split or merged deleted. One heuristic for choosing next waypoint is picking the closest frontier to the robot. Another one is picking the largest frontier cell.
 
-
+% ----------------
 \subsection {The Exploration Algorithm Provided}
+The method provided finds frontiers by traverse all the cells on the occupancy grid each time. Once a frontier is found, it checks if it is in the blacklist. If not, it then calculates the distance between the cell and the centre of the leftmost boundary and see if its distance is smaller than the current smallest value.  Finally, the frontier with the smallest distance (to the centre of the left boundary of the grid) is chose to be the next destination.  
 
+This method is extremely slow since the standard cell to compare the distance is the centre of the left boundary and also there are three nested loops to be run for each time the function is called. Especially the former, setting the standard cell to the midpoint makes the robot shift around the horizontal symmetry axis line by line like a windshield wiper, which significantly increases the time used to explore the map. We have run around 20 times using this method and the total time used and the map coverage is averagely around 2400 seconds (40 minutes) and 78\%. 
+
+% ----------------
 \subsection {Our Implementation}
+We chose the wave front detection algorithm to implement. For choosing the next point, it will pick the cell with the smallest distance from the search start cell, which is the current robot position. (See the key code in Fig. \ref{fig:waveFrontDetection} and Fig. \ref{fig:closestHeuristic}). 
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{graphs/part2-3/WaveFrontDetection.png}
+\caption{Wave Front Detection}
+\label{fig:waveFrontDetection}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{graphs/part2-3/closest.png}
+\caption{Closest Heuristic}
+\label{fig:closestHeuristic}
+\end{figure}
+
+Specifically, for the wave front detection, we used two nested depth first search. The outer one goes through the normal cells starting from the current robot position and checks if the current cell is a frontier or not. If the current cell is a frontier and is not visited yet, it enters the inner loop and adds the cell into the frontier list if the cell. At the end of both loops, the valid unvisited neighbours (the 'valid' means it is not out of boundary) of the current (frontier) cell will be pushed into the waiting list. It is notable that the neighbours of a frontier cell are much more likely to be frontiers.To get the closest frontier from the current robot position, we first calculate the distance and store the information into a list \textit{fronterDisInfo} along with the cell coordinate, and then use the list comprehensions. Due to limitation of the \textit{min()}, we add an exception to handle the error occurred when there is no cell in the list after removing the frontier cells that are too close to the robot. 
+
+As a result, the new algorithm takes around xxxx seconds (xxx minutes) to explores the map with 78.24 \% coverage. 
 
 % -------------------------------------------------------------------------------------------
-\section{Integration of Our Planner and Exploration System [Yun]}
+\section{Integration of Our Planner and Exploration System}
+
+See Fig.\ref{fig:result3} for the result. The coverage is  78.31\%.
+
+\begin{figure}[H]
+\centering  
+\subfigure[STDR GUI]{
+\includegraphics[width=0.45\textwidth]{graphs/part3/GUI.png}}
+\subfigure[Planner Occupancy Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part3/plannerOG.png}}
+\subfigure[Planner Search Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part3/plannerSG.png}}
+\subfigure[Mapper Node Occupancy Grid]{
+\includegraphics[width=0.45\textwidth]{graphs/part3/mapperNodeOG.png}}
+\caption{Result on the second launch script}
+\label{fig:result3}
+\end{figure}
 
 % -------------------------------------------------------------------------------------------
-\section{Information-Theoretic Path Planning [Yusi]}
+\section{Information-Theoretic Path Planning}
 
+\subsection {Definition}
+In terms of path planning, the information theoritic approach picks the next waypoint which can reduce the uncertainty of map the most. One approach is using entropy, which based on the thermodynamic concept of irregularity, to assess the uncertainty. And to decide where to go, mutual entropy is used. In detail, it first pick a location and predict the observation. If it saw the observation, then update the map and check the effect on the map entropy. In our model where cells are either empty (0), unknown (0.5) and blocked (1), the entropy of a single cell is:
 % -------------------------------------------------------------------------------------------
 \section{Conclusion [dai ding]}
 

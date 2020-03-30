@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.10.14)  26 MAR 2020 04:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.10.14)  30 MAR 2020 18:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -505,35 +505,35 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 40.
-<graphs/part1/reactivePlanningSystem.PNG, id=53, 346.29375pt x 391.4625pt>
+<graphs/part1/reactivePlanningSystem.PNG, id=57, 346.29375pt x 391.4625pt>
 File: graphs/part1/reactivePlanningSystem.PNG Graphic file (type png)
 <use graphs/part1/reactivePlanningSystem.PNG>
 Package pdftex.def Info: graphs/part1/reactivePlanningSystem.PNG  used on input
  line 51.
 (pdftex.def)             Requested size: 173.14644pt x 195.73076pt.
-<graphs/part1/code.PNG, id=56, 740.7675pt x 86.3225pt>
+<graphs/part1/code.PNG, id=60, 740.7675pt x 86.3225pt>
 File: graphs/part1/code.PNG Graphic file (type png)
 <use graphs/part1/code.PNG>
 Package pdftex.def Info: graphs/part1/code.PNG  used on input line 63.
 (pdftex.def)             Requested size: 444.46393pt x 51.79388pt.
-<graphs/part1/1-1/GUI.png, id=59, 653.44125pt x 487.8225pt>
+<graphs/part1/1-1/GUI.png, id=63, 653.44125pt x 487.8225pt>
 File: graphs/part1/1-1/GUI.png Graphic file (type png)
 <use graphs/part1/1-1/GUI.png>
 Package pdftex.def Info: graphs/part1/1-1/GUI.png  used on input line 73.
 (pdftex.def)             Requested size: 211.3883pt x 157.81096pt.
-<graphs/part1/1-1/plannerOG.png, id=60, 943.525pt x 735.74875pt>
+<graphs/part1/1-1/plannerOG.png, id=64, 943.525pt x 735.74875pt>
 File: graphs/part1/1-1/plannerOG.png Graphic file (type png)
 <use graphs/part1/1-1/plannerOG.png>
 Package pdftex.def Info: graphs/part1/1-1/plannerOG.png  used on input line 75.
 
 (pdftex.def)             Requested size: 211.3883pt x 164.82904pt.
-<graphs/part1/1-1/plannerSG.png, id=61, 943.525pt x 735.74875pt>
+<graphs/part1/1-1/plannerSG.png, id=65, 943.525pt x 735.74875pt>
 File: graphs/part1/1-1/plannerSG.png Graphic file (type png)
 <use graphs/part1/1-1/plannerSG.png>
 Package pdftex.def Info: graphs/part1/1-1/plannerSG.png  used on input line 77.
 
 (pdftex.def)             Requested size: 211.3883pt x 164.82904pt.
-<graphs/part1/1-1/mapperNodeOG.png, id=62, 811.03pt x 634.37pt>
+<graphs/part1/1-1/mapperNodeOG.png, id=66, 811.03pt x 634.37pt>
 File: graphs/part1/1-1/mapperNodeOG.png Graphic file (type png)
 <use graphs/part1/1-1/mapperNodeOG.png>
 Package pdftex.def Info: graphs/part1/1-1/mapperNodeOG.png  used on input line 
@@ -544,24 +544,24 @@ Package pdftex.def Info: graphs/part1/1-1/mapperNodeOG.png  used on input line
 
 {/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./graph
 s/part1/reactivePlanningSystem.PNG> <./graphs/part1/code.PNG>]
-<graphs/part1/1-2/GUI.png, id=76, 773.89125pt x 517.935pt>
+<graphs/part1/1-2/GUI.png, id=80, 773.89125pt x 517.935pt>
 File: graphs/part1/1-2/GUI.png Graphic file (type png)
 <use graphs/part1/1-2/GUI.png>
 Package pdftex.def Info: graphs/part1/1-2/GUI.png  used on input line 87.
 (pdftex.def)             Requested size: 211.3883pt x 141.47234pt.
-<graphs/part1/1-2/plannerOG.png, id=77, 943.525pt x 735.74875pt>
+<graphs/part1/1-2/plannerOG.png, id=81, 943.525pt x 735.74875pt>
 File: graphs/part1/1-2/plannerOG.png Graphic file (type png)
 <use graphs/part1/1-2/plannerOG.png>
 Package pdftex.def Info: graphs/part1/1-2/plannerOG.png  used on input line 89.
 
 (pdftex.def)             Requested size: 211.3883pt x 164.82904pt.
-<graphs/part1/1-2/plannerSG.png, id=78, 943.525pt x 735.74875pt>
+<graphs/part1/1-2/plannerSG.png, id=82, 943.525pt x 735.74875pt>
 File: graphs/part1/1-2/plannerSG.png Graphic file (type png)
 <use graphs/part1/1-2/plannerSG.png>
 Package pdftex.def Info: graphs/part1/1-2/plannerSG.png  used on input line 91.
 
 (pdftex.def)             Requested size: 211.3883pt x 164.82904pt.
-<graphs/part1/1-2/mapperNodeOG.png, id=79, 808.01875pt x 637.38126pt>
+<graphs/part1/1-2/mapperNodeOG.png, id=83, 808.01875pt x 637.38126pt>
 File: graphs/part1/1-2/mapperNodeOG.png Graphic file (type png)
 <use graphs/part1/1-2/mapperNodeOG.png>
 Package pdftex.def Info: graphs/part1/1-2/mapperNodeOG.png  used on input line 
@@ -574,37 +574,75 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 art1/1-1/plannerSG.png> <./graphs/part1/1-1/mapperNodeOG.png>] [3 <./graphs/par
 t1/1-2/GUI.png> <./graphs/part1/1-2/plannerOG.png> <./graphs/part1/1-2/plannerS
 G.png> <./graphs/part1/1-2/mapperNodeOG.png>]
+<graphs/part2-3/WaveFrontDetection.png, id=112, 571.13374pt x 718.685pt>
+File: graphs/part2-3/WaveFrontDetection.png Graphic file (type png)
+<use graphs/part2-3/WaveFrontDetection.png>
+Package pdftex.def Info: graphs/part2-3/WaveFrontDetection.png  used on input l
+ine 125.
+(pdftex.def)             Requested size: 285.56618pt x 359.34161pt.
+<graphs/part2-3/closest.png, id=113, 587.19376pt x 154.5775pt>
+File: graphs/part2-3/closest.png Graphic file (type png)
+<use graphs/part2-3/closest.png>
+Package pdftex.def Info: graphs/part2-3/closest.png  used on input line 132.
+(pdftex.def)             Requested size: 293.59616pt x 77.28854pt.
+ [4 <./graphs/part2-3/WaveFrontDetection.png>]
+<graphs/part3/GUI.png, id=122, 333.245pt x 256.45813pt>
+File: graphs/part3/GUI.png Graphic file (type png)
+<use graphs/part3/GUI.png>
+Package pdftex.def Info: graphs/part3/GUI.png  used on input line 149.
+(pdftex.def)             Requested size: 211.3883pt x 162.68082pt.
+<graphs/part3/plannerOG.png, id=123, 943.525pt x 734.745pt>
+File: graphs/part3/plannerOG.png Graphic file (type png)
+<use graphs/part3/plannerOG.png>
+Package pdftex.def Info: graphs/part3/plannerOG.png  used on input line 151.
+(pdftex.def)             Requested size: 211.3883pt x 164.60417pt.
+<graphs/part3/plannerSG.png, id=124, 934.99312pt x 718.18312pt>
+File: graphs/part3/plannerSG.png Graphic file (type png)
+<use graphs/part3/plannerSG.png>
+Package pdftex.def Info: graphs/part3/plannerSG.png  used on input line 153.
+(pdftex.def)             Requested size: 211.3883pt x 162.36229pt.
+<graphs/part3/mapperNodeOG.png, id=125, 810.02625pt x 637.38126pt>
+File: graphs/part3/mapperNodeOG.png Graphic file (type png)
+<use graphs/part3/mapperNodeOG.png>
+Package pdftex.def Info: graphs/part3/mapperNodeOG.png  used on input line 155.
 
-LaTeX Warning: Empty `thebibliography' environment on input line 136.
+(pdftex.def)             Requested size: 211.3883pt x 166.32793pt.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 140.
-[4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 140.
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5 <./graphs/part2-3/closest.png>]
+
+LaTeX Warning: Empty `thebibliography' environment on input line 177.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 181.
+[6 <./graphs/part3/GUI.png> <./graphs/part3/plannerOG.png> <./graphs/part3/plan
+nerSG.png> <./graphs/part3/mapperNodeOG.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 181.
  (./COMP0037_CW2_GROUP_L.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 140.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 140.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 181.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 181.
 Package rerunfilecheck Info: File `COMP0037_CW2_GROUP_L.out' has not changed.
-(rerunfilecheck)             Checksum: 2442FC53E6B2F8996769488A28FE5F66;850.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 140.
+(rerunfilecheck)             Checksum: C77F9315E7BD7C3B058350AA5D930A0B;885.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 181.
  ) 
 Here is how much of TeX's memory you used:
- 9081 strings out of 492616
- 143996 string characters out of 6129480
- 265247 words of memory out of 5000000
- 12773 multiletter control sequences out of 15000+600000
- 41330 words of font info for 83 fonts, out of 8000000 for 9000
+ 9150 strings out of 492616
+ 145272 string characters out of 6129480
+ 265414 words of memory out of 5000000
+ 12801 multiletter control sequences out of 15000+600000
+ 42595 words of font info for 101 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,10n,45p,876b,350s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,10n,45p,1086b,350s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
 exlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/tex
 live/2019/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/local/texli
 ve/2019/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/te
 xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on COMP0037_CW2_GROUP_L.pdf (4 pages, 1308717 bytes).
+Output written on COMP0037_CW2_GROUP_L.pdf (6 pages, 2161210 bytes).
 PDF statistics:
- 136 PDF objects out of 1000 (max. 8388607)
- 104 compressed objects within 2 object streams
- 30 named destinations out of 1000 (max. 500000)
- 22675 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 174 PDF objects out of 1000 (max. 8388607)
+ 128 compressed objects within 2 object streams
+ 40 named destinations out of 1000 (max. 500000)
+ 22713 words of extra memory for PDF output out of 24883 (max. 10000000)
 
