@@ -19,12 +19,13 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
         self.position = None
 
         # for wave frontier detection
-        self.frontierList = [] 
+        self.frontierList = []
+        self.initFrontierInfo() 
 
         ExplorerNodeBase.__init__(self)  # not sure but has to be put here, or it can't find the above two attributes
         
         self.current_pose_subscriber = rospy.Subscriber('/robot0/odom', Odometry, self.current_pose_callback)
-
+   
 
     # pose callback to get self cell position
     def current_pose_callback(self, data):
@@ -33,10 +34,12 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
         pos = pose.position
         
         try:
-            position = self.occupancyGrid.getCellCoordinatesFromWorldCoordinates((pos.x,pos.y))
-            self.position = position
+            self.occupancyGrid
         except AttributesError:
             return
+        
+        position = self.occupancyGrid.getCellCoordinatesFromWorldCoordinates((pos.x,pos.y))
+        self.position = position
     
     # if a goal is found unreachable, add it to the blacklist
     def destinationReached(self, goal, goalReached):
@@ -45,9 +48,18 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
             self.blackList.append(goal)
 
     # ------------------------------------
-    def clearOldFrontierInfo(self):
+    def initFrontierInfo(self):
         rospy.loginfo("Clearing old frontier info")
-        self.frontierList = []
+
+        # use instance variable for efficiency
+        self.qM = []
+        self.mapOpenList = []
+        self.mapCloseList = []
+
+        self.qF = []
+        self.newFrontier = []
+        self.frontierOpenList = []
+        self.frontierCloseList = []
 
     def isInBoundary(self, cell):
         width, height = self.occupancyGrid.getWidthInCells(), self.occupancyGrid.getHeightInCells()
@@ -74,61 +86,50 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
     def searchFrontiers(self, searchStartCell, frontierList):
         rospy.loginfo("Searching frontiers")
 
-        # init
-        qM = []
-        mapCloseList = []
-        mapOpenList = []
+        self.qM = [searchStartCell]
+        while len(self.qM) != 0:
 
-        qF = []
-        newFrontier = []
-        frontierOpenList = []
-        frontierCloseList = []
+            p = self.qM.pop(0)
 
-        qM = [searchStartCell]
-        while len(qM) != 0:
-
-            p = qM.pop(0)
-
-            if p in mapCloseList or p in self.blackList:
+            if p in self.mapCloseList or p in self.blackList:
                 continue
 
             # found a frontier
             if self.isFrontierCell(p[0], p[1]):
 
                 # init to trace along the frontiers
-                qF = []
-                newFrontier = []
-                qF.append(p)
-                frontierOpenList.append(p)
+                self.qF = []
+                self.newFrontier = []
+                self.qF.append(p)
+                self.frontierOpenList.append(p)
 
-                while len(qF) != 0:
+                while len(self.qF) != 0:
                     
-                    q = qF.pop(0)
+                    q = self.qF.pop(0)
                     
-                    if q in mapCloseList or q in frontierCloseList or q in self.blackList:
+                    if q in self.mapCloseList or q in self.frontierCloseList or q in self.blackList:
                         continue
                     
                     if self.isFrontierCell(q[0], q[1]):
                         
-                        newFrontier.append(q)
+                        self.newFrontier.append(q)
 
                         for w in self.getNeighbours(q):
-                            if w not in frontierOpenList and w not in frontierCloseList \
-                                    and w not in mapCloseList:
-                                qF.append(w)
-                                frontierOpenList.append(w)
+                            if w not in self.frontierOpenList and w not in self.frontierCloseList \
+                                    and w not in self.mapCloseList:
+                                self.qF.append(w)
+                                self.frontierOpenList.append(w)
                     
-                    frontierCloseList.append(q)
-                frontierList += newFrontier
-                mapCloseList += newFrontier
+                    self.frontierCloseList.append(q)
+                frontierList += self.newFrontier
+                self.mapCloseList += self.newFrontier
 
-            # add target neighbours into waiting list
             for v in self.getNeighbours(p):
-                if v not in mapOpenList and v not in mapCloseList \
+                if v not in self.mapOpenList and v not in self.mapCloseList \
                                 and self.hasAtLeastOneOpenNeighbours(v):  
-                    qM.append(v)
-                    mapOpenList.append(v)
-            mapCloseList.append(p)
+                    self.qM.append(v)
+                    self.mapOpenList.append(v)
+            self.mapCloseList.append(p)
 
         return frontierList
 
@@ -151,7 +152,7 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
         rospy.loginfo("Update frontiers")
 
         rospy.loginfo("clearing old info")
-        self.clearOldFrontierInfo()
+        self.initFrontierInfo()
 
         searchStartCell = self.checkSelfPosition()
         rospy.loginfo("search start cell: (%d, %d)\n",searchStartCell[0],searchStartCell[1])
