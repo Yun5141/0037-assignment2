@@ -56,6 +56,7 @@ class ExplorerNodeWavefrontBase(ExplorerNodeBase):
         rospy.loginfo("clearing old info")
         self.frontierList = []  
     
+
     def hasEmptyNeighbours(self,centerCell):
         for cell in self.getNeighbours(centerCell):
             if self.isInBoundary(cell) and \
