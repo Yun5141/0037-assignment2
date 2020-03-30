@@ -8,7 +8,7 @@ from nav_msgs.msg import Odometry
 
 # This class is a base class implementing the wave front detection
 # refering the seudocode in the suggested paper 'Frontier Based Exploration for Autonomous Robot'
-class ExplorerNodeDetectionBase(ExplorerNodeBase):
+class ExplorerNodeWFDBase(ExplorerNodeBase):
 
     def __init__(self):
 
@@ -46,6 +46,9 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
         if goalReached is False:
             # print 'Adding ' + str(goal) + ' to the naughty step'
             self.blackList.append(goal)
+    
+    def chooseNewDestination(self):
+        pass
 
     # ------------------------------------
     def initFrontierInfo(self):
@@ -83,7 +86,7 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
                 return True
   
     # depth first search, starting with self position
-    def searchFrontiers(self, searchStartCell, frontierList):
+    def searchFrontiers0(self, searchStartCell, frontierList):
         rospy.loginfo("Searching frontiers")
 
         self.qM = [searchStartCell]
@@ -131,6 +134,46 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
                     self.mapOpenList.append(v)
             self.mapCloseList.append(p)
 
+        return frontierList
+
+    def searchFrontiers(self,searchStartCell,frontierList):
+        
+        currentCell = searchStartCell
+        waitingList = [searchStartCell]
+        visitedList = []
+
+        while len(waitingList) != 0:
+            currentCell = waitingList.pop(0)
+
+            if currentCell in visitedList or currentCell in self.blackList:
+                continue
+            
+            if self.isFrontierCell(currentCell[0], currentCell[1]):
+
+                currentPotentialFrontier = currentCell
+                waitingPotentialFrontierList = [currentCell]
+
+                while len(waitingPotentialFrontierList) != 0:
+                    currentPotentialFrontier = waitingPotentialFrontierList.pop(0)
+
+                    if currentPotentialFrontier in visitedList or currentPotentialFrontier in self.blackList:
+                        continue
+
+                    if self.isFrontierCell(currentPotentialFrontier[0], currentPotentialFrontier[1]):
+                        frontierList.append(currentPotentialFrontier)
+
+                        for neighbours in self.getNeighbours(currentPotentialFrontier):
+                            if neighbours not in visitedList:
+                                waitingPotentialFrontierList.append(neighbours)
+                        
+                    visitedList.append(currentPotentialFrontier)
+
+            for neighbours in self.getNeighbours(currentCell):
+                if neighbours not in waitingList and neighbours not in visitedList and self.hasAtLeastOneOpenNeighbours(neighbours):
+                    waitingList.append(neighbours)
+                
+            visitedList.append(currentCell)
+        
         return frontierList
 
     def getArbitraryFreeCell(self):

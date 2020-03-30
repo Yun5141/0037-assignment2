@@ -1,14 +1,14 @@
 import rospy
-from explorer_node_wave_front_detection_base import ExplorerNodeDetectionBase
+from explorer_node_WFD_base import ExplorerNodeWFDBase
 
 # Part 2.3
 
 # This class implements an explorer 
 # which picks the closest cell as the next destination.
-class ExplorerNode(ExplorerNodeDetectionBase):
+class ExplorerNode(ExplorerNodeWFDBase):
 
     def __init__(self):
-        ExplorerNodeDetectionBase.__init__(self)
+        ExplorerNodeWFDBase.__init__(self)
 
     def getDistance(self, cellACoords, cellBCoords):
         return sum(map(lambda xs : (xs[0] - xs[1]) ** 2, zip(cellACoords, cellBCoords)))
