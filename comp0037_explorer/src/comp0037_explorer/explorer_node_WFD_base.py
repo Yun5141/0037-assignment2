@@ -47,22 +47,13 @@ class ExplorerNodeWFDBase(ExplorerNodeBase):
             # print 'Adding ' + str(goal) + ' to the naughty step'
             self.blackList.append(goal)
     
-    def chooseNewDestination(self):
-        pass
 
     # ------------------------------------
     def initFrontierInfo(self):
         rospy.loginfo("Clearing old frontier info")
 
-        # use instance variable for efficiency
-        self.qM = []
-        self.mapOpenList = []
-        self.mapCloseList = []
+        self.frontierList = []
 
-        self.qF = []
-        self.newFrontier = []
-        self.frontierOpenList = []
-        self.frontierCloseList = []
 
     def isInBoundary(self, cell):
         width, height = self.occupancyGrid.getWidthInCells(), self.occupancyGrid.getHeightInCells()
@@ -85,57 +76,7 @@ class ExplorerNodeWFDBase(ExplorerNodeBase):
             if self.isInBoundary(neighbours) and self.isEmptyCell(neighbours):
                 return True
   
-    # depth first search, starting with self position
-    def searchFrontiers0(self, searchStartCell, frontierList):
-        rospy.loginfo("Searching frontiers")
-
-        self.qM = [searchStartCell]
-        while len(self.qM) != 0:
-
-            p = self.qM.pop(0)
-
-            if p in self.mapCloseList or p in self.blackList:
-                continue
-
-            # found a frontier
-            if self.isFrontierCell(p[0], p[1]):
-
-                # init to trace along the frontiers
-                self.qF = []
-                self.newFrontier = []
-                self.qF.append(p)
-                self.frontierOpenList.append(p)
-
-                while len(self.qF) != 0:
-                    
-                    q = self.qF.pop(0)
-                    
-                    if q in self.mapCloseList or q in self.frontierCloseList or q in self.blackList:
-                        continue
-                    
-                    if self.isFrontierCell(q[0], q[1]):
-                        
-                        self.newFrontier.append(q)
-
-                        for w in self.getNeighbours(q):
-                            if w not in self.frontierOpenList and w not in self.frontierCloseList \
-                                    and w not in self.mapCloseList:
-                                self.qF.append(w)
-                                self.frontierOpenList.append(w)
-                    
-                    self.frontierCloseList.append(q)
-                frontierList += self.newFrontier
-                self.mapCloseList += self.newFrontier
-
-            for v in self.getNeighbours(p):
-                if v not in self.mapOpenList and v not in self.mapCloseList \
-                                and self.hasAtLeastOneOpenNeighbours(v):  
-                    self.qM.append(v)
-                    self.mapOpenList.append(v)
-            self.mapCloseList.append(p)
-
-        return frontierList
-
+    # breadth first search, starting with self position
     def searchFrontiers(self,searchStartCell,frontierList):
         
         currentCell = searchStartCell
