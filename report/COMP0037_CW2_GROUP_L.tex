@@ -18,7 +18,7 @@
 \usepackage{float}
 \usepackage{subfigure}
 
-
+\usepackage{amsmath}
 
 \title{COMP0037 ASSIGNMENT 2}
 
@@ -134,9 +134,9 @@ We chose the wave front detection algorithm to implement. For choosing the next 
 \label{fig:closestHeuristic}
 \end{figure}
 
-Specifically, for the wave front detection, we used two nested depth first search. The outer one goes through the normal cells starting from the current robot position and checks if the current cell is a frontier or not. If the current cell is a frontier and is not visited yet, it enters the inner loop and adds the cell into the frontier list if the cell. At the end of both loops, the valid unvisited neighbours (the 'valid' means it is not out of boundary) of the current (frontier) cell will be pushed into the waiting list. It is notable that the neighbours of a frontier cell are much more likely to be frontiers.To get the closest frontier from the current robot position, we first calculate the distance and store the information into a list \textit{fronterDisInfo} along with the cell coordinate, and then use the list comprehensions. Due to limitation of the \textit{min()}, we add an exception to handle the error occurred when there is no cell in the list after removing the frontier cells that are too close to the robot. 
+Specifically, we implement the wave front detection using two nested breadth first search referencing from the suggested paper 'Frontier Based Exploration for Autonomous Robot' \cite{WFD}. The outer one goes through the normal cells starting from the current robot position and checks if the current cell is a frontier or not. If the current cell is a frontier and is not visited yet, it enters the inner loop and adds the cell into the frontier list if the cell. At the end of both loops, the valid unvisited neighbours (the 'valid' means it is not out of boundary) of the current (frontier) cell will be pushed into the waiting list. It is notable that the neighbours of a frontier cell are much more likely to be frontiers.To get the closest frontier from the current robot position, we first calculate the distance and store the information into a list \textit{fronterDisInfo} along with the cell coordinate, and then use the list comprehensions. Due to limitation of the \textit{min()}, we add an exception to handle the error occurred when there is no cell in the list after removing the frontier cells that are too close to the robot. 
 
-As a result, the new algorithm takes around xxxx seconds (xxx minutes) to explores the map with 78.24 \% coverage. 
+As a result, the new algorithm takes around 9 minutes to explores the map with 78.24 \% coverage. 
 
 % -------------------------------------------------------------------------------------------
 \section{Integration of Our Planner and Exploration System}
@@ -162,6 +162,27 @@ See Fig.\ref{fig:result3} for the result. The coverage is  78.31\%.
 
 \subsection {Definition}
 In terms of path planning, the information theoritic approach picks the next waypoint which can reduce the uncertainty of map the most. One approach is using entropy, which based on the thermodynamic concept of irregularity, to assess the uncertainty. And to decide where to go, mutual entropy is used. In detail, it first pick a location and predict the observation. If it saw the observation, then update the map and check the effect on the map entropy. In our model where cells are either empty (0), unknown (0.5) and blocked (1), the entropy of a single cell is:
+
+\begin{align}
+H(C) &= - \sum p(c=c)ln(c=c) \\
+         &= -(1-p(c))ln(1-p(c)) - p(c)ln\,p(c) \\
+\end{align}
+
+And the mutual information is given by:
+\begin{align}
+I(x) = H(C) - H(C|x) 
+\end{align}
+
+Where H(C|x) is the expected entropy  such that 
+\begin{align}
+H(C|x)= \sum_{C}p_{C_{k}} (M) H(C|x, z(M))
+\end{align}
+Where x, z is the destination and observation
+
+\subsection{}
+
+\subsection{}
+
 % -------------------------------------------------------------------------------------------
 \section{Conclusion [dai ding]}
 
@@ -173,6 +194,21 @@ In terms of path planning, the information theoritic approach picks the next way
 
 %%% Comment out this section when you \bibliography{references} is enabled.
 \begin{thebibliography}{1}
+
+
+ \bibitem{WFD}
+ Anirudh Topiwala; Pranav Inani; Abhishek Kathpal
+\newblock (2018)
+\newblock Frontier Based Exploration for Autonomous Robot
+\newblock {\em<https://arxiv.org/abs/1806.03581>}.
+
+ \bibitem{InfoTheoretic}
+Callum Rhodes; Cunjia Liu; Wen-Hua Chen
+\newblock (2019)
+\newblock An Information Theoretic Approach to Path Planning for Frontier Exploration
+\newblock {\em<https://www.researchgate.net/publication/331929185\_An\_Information\_Theoretic\_Approach\_to\_Path\_Planning\_for\_Frontier\_Exploration>}.
+
+
 
 \end{thebibliography}
 
