@@ -1,19 +1,19 @@
 import rospy
-from explorer_node_wave_front_detection_base import ExplorerNodeWaveFrontDetectionBase
+from explorer_node_wave_front_detection_base import ExplorerNodeDetectionBase
 
 # This class implements an explorer 
 # which picks the closest cell as the next destination.
-class ExplorerNode(ExplorerNodeWaveFrontDetectionBase):
+class ExplorerNode(ExplorerNodeDetectionBase):
 
     def __init__(self):
-        ExplorerNodeWavefrontBase.__init__(self)
+        ExplorerNodeDetectionBase.__init__(self)
 
     # ------- Heuristic for picking the new destination ------
     def getDistance(self, cellACoords, cellBCoords):
         return sum(map(lambda xs : (xs[0] - xs[1]) ** 2, zip(cellACoords, cellBCoords)))
 
     def getFrontiersDisInfo(self, frontierCoordsList):
-        x,y = self.pose
+        x,y = self.position
         frontierDisInfo = []
         rospy.loginfo("self coords in get frontier dis info: (%d, %d)\n", x, y)
         for goalCellCoords in frontierCoordsList:
