@@ -15,7 +15,7 @@ class ExplorerNode(ExplorerNodeBase):
 
     def __init__(self):
 
-        self.blackList_cellCoords = []
+        self.blackList = []
 
         # to get self position for searching the frontiers
         self.searchStartCell = None # search start cell / current cell coords
@@ -52,7 +52,7 @@ class ExplorerNode(ExplorerNodeBase):
     def destinationReached(self, goal, goalReached):
         if goalReached is False:
             # print 'Adding ' + str(goal) + ' to the naughty step'
-            self.blackList_cellCoords.append(goal)
+            self.blackList.append(goal)
 
     # ---------- Wave Front Detection -----------
     def clearOldFrontiersInfo(self):
@@ -90,7 +90,7 @@ class ExplorerNode(ExplorerNodeBase):
                 self.occupancyGrid.getCell(cellCoords[0],cellCoords[1]) != 0.0 or \
                 cellCoords in self.boundaryCells or \
                 cellCoords in self.visitedList or \
-                cellCoords in self.blackList_cellCoords
+                cellCoords in self.blackList
     
     # return two list: validNeighbours, boundaryNeighbours
     def getDelicateNeighbours(self, centerCell):
@@ -168,31 +168,31 @@ class ExplorerNode(ExplorerNodeBase):
             l = frontierList[:]
             l = filter(lambda xs : len(xs) != 0, l)
             l = list(set([tuple(t) for t in l]))
-            self.frontierList = filter(lambda x : x not in self.blackList_cellCoords, l)
+            self.frontierList = filter(lambda x : x not in self.blackList, l)
             return True
         
         rospy.loginfo("no frontierList or len(frontierList) == 0")
     
     # ------- Heuristic for picking the new destination ------
     def getDistance(self, cellACoords, cellBCoords):
-        return sum(map(lambda xs : (xs[0] - xs[1]) ** 2, zip(cellACoords, cellBCoords)))
+        return (cellACoords[0] - cellBCoords[0])**2 + (cellACoords[1] - cellBCoords[1])**2 
+        #return sum(map(lambda xs : (xs[0] - xs[1]) ** 2, zip(cellACoords, cellBCoords)))
 
     def getFrontiersDisInfo(self, frontierCoordsList):
-        x,y = self.searchStartCell
+        x,y = self.pose
         rospy.loginfo("self coords in get frontier dis info: (%d, %d)\n", x, y)
-        #rospy.loginfo("frontierList in getDisInfo: " + str(frontierCoordsList))
         for goalCellCoords in frontierCoordsList:
-            dis = self.getDistance([x,y],goalCellCoords)
-            #rospy.loginfo("dis: %d\n", dis)
+            if goalCellCoords in self.blackList:
+                continue
+            dis = self.getDistance(goalCellCoords,[x,y])
             self.frontierDisInfo.append([dis, goalCellCoords])
-        #rospy.loginfo("DisInfoList: " + str(self.frontierDisInfo))
 
     def getNewDestination(self, frontierDisInfo):
-        candidate = [[]]
+        candidate = frontierDisInfo[:]
 
         # the closest cell will be picked first
-        candidate = [cell for dis,cell in frontierDisInfo if dis == min([dis for dis,cellCoords in frontierDisInfo])]
-
+        candidate = [cell for dis,cell in candidate if dis == min(filter(lambda d : d > 5, [dis for dis,cellCoords in candidate]))]
+        '''
         # if the distances are same the pick cell with the gratest x value
         if len(candidate) > 1:
             rospy.loginfo("found same distance, picking the one with greatest x \n")
@@ -202,7 +202,7 @@ class ExplorerNode(ExplorerNodeBase):
         if len(candidate) > 1:
             rospy.loginfo("found same distance and same x, picking the one with greatest y \n")
             candidate = [cell for cell in candidate if cell[1] == max([y for _,y in candidate])]
-        
+        '''
         return candidate[0]
 
     def getArbitraryUnknownCell(self):

@@ -56,7 +56,7 @@ class ExplorerNodeBase(object):
 
 
         # Part 2.2
-        self.startT = rospy.get_time()
+        self.startT = None #rospy.get_time()
 
         
     def mapUpdateCallback(self, msg):
@@ -227,6 +227,9 @@ class ExplorerNodeBase(object):
        
     def run(self):
 
+        # Part 2.2
+        self.startT = rospy.get_time()
+        
         explorerThread = ExplorerNodeBase.ExplorerThread(self)
 
         keepRunning = True
