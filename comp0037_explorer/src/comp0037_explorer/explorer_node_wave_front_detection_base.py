@@ -33,12 +33,10 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
         pos = pose.position
         
         try:
-            
             position = self.occupancyGrid.getCellCoordinatesFromWorldCoordinates((pos.x,pos.y))
             self.position = position
         except AttributesError:
             return
-        
     
     # if a goal is found unreachable, add it to the blacklist
     def destinationReached(self, goal, goalReached):
@@ -54,7 +52,10 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
     def isInBoundary(self, cell):
         width, height = self.occupancyGrid.getWidthInCells(), self.occupancyGrid.getHeightInCells()
         return cell[0] in range(0,width) and cell[1] in range(0,height)
-    
+
+    def isEmptyCell(self, cell):
+        return self.occupancyGrid.getCell(cell[0], cell[1]) == 0.0
+        
     def getNeighbours(self, centerCell):
         offset = [-1,0,1]
         offset2 = [[offsetX,offsetY] for offsetX in offset for offsetY in offset]
@@ -63,6 +64,11 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
                         if not [offsetX, offsetY] == [0,0]]
         l = filter(lambda x:self.isInBoundary(x),l)
         return l
+
+    def hasAtLeastOneOpenNeighbours(self, cell):
+        for neighbours in self.getNeighbours(cell):
+            if self.isInBoundary(neighbours) and self.isEmptyCell(neighbours):
+                return True
   
     # depth first search, starting with self position
     def searchFrontiers(self, searchStartCell, frontierList):
@@ -125,15 +131,6 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
             mapCloseList.append(p)
 
         return frontierList
-    
-    def hasAtLeastOneOpenNeighbours(self, cell):
-
-        for neighbours in self.getNeighbours(cell):
-            if self.isInBoundary(neighbours) and self.isEmptyCell(neighbours):
-                return True
-
-    def isEmptyCell(self, cell):
-        return self.occupancyGrid.getCell(cell[0], cell[1]) == 0.0
 
     def getArbitraryFreeCell(self):
         rospy.loginfo("initial search start cell is None\n")
