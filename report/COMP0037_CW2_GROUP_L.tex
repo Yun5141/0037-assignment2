@@ -136,7 +136,7 @@ We chose the wave front detection algorithm to implement. For choosing the next 
 
 Specifically, we implement the wave front detection using two nested breadth first search referencing from the suggested paper 'Frontier Based Exploration for Autonomous Robot' \cite{WFD}. The outer one goes through the normal cells starting from the current robot position and checks if the current cell is a frontier or not. If the current cell is a frontier and is not visited yet, it enters the inner loop and adds the cell into the frontier list if the cell. At the end of both loops, the valid unvisited neighbours (the 'valid' means it is not out of boundary) of the current (frontier) cell will be pushed into the waiting list. It is notable that the neighbours of a frontier cell are much more likely to be frontiers.To get the closest frontier from the current robot position, we first calculate the distance and store the information into a list \textit{fronterDisInfo} along with the cell coordinate, and then use the list comprehensions. Due to limitation of the \textit{min()}, we add an exception to handle the error occurred when there is no cell in the list after removing the frontier cells that are too close to the robot. 
 
-As a result, the new algorithm takes around 9 minutes to explores the map with 78.24 \% coverage. 
+As a result, the new algorithm takes around 25 minutes to explores the map with 78.24 \% coverage. 
 
 % -------------------------------------------------------------------------------------------
 \section{Integration of Our Planner and Exploration System}
@@ -201,6 +201,12 @@ Where x, z is the destination and observation
 \newblock (2018)
 \newblock Frontier Based Exploration for Autonomous Robot
 \newblock {\em<https://arxiv.org/abs/1806.03581>}.
+
+ \bibitem{}
+Brian Yamauchi
+\newblock (1997)
+\newblock  A Frontier-Based Approach for Autonomous Exploration
+\newblock {\em<https://www.semanticscholar.org/paper/A-frontier-based-approach-for-autonomous-Yamauchi/a1875055e9c526cbdc7abb161959d76d14b58266>}.
 
  \bibitem{InfoTheoretic}
 Callum Rhodes; Cunjia Liu; Wen-Hua Chen
