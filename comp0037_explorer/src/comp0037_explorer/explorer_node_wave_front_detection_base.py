@@ -33,12 +33,12 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
         pos = pose.position
         
         try:
-            self.occupancyGrid
+            
+            position = self.occupancyGrid.getCellCoordinatesFromWorldCoordinates((pos.x,pos.y))
+            self.position = position
         except AttributesError:
             return
         
-        position = self.occupancyGrid.getCellCoordinatesFromWorldCoordinates((pos.x,pos.y))
-        self.position = position
     
     # if a goal is found unreachable, add it to the blacklist
     def destinationReached(self, goal, goalReached):
@@ -131,12 +131,6 @@ class ExplorerNodeDetectionBase(ExplorerNodeBase):
         for neighbours in self.getNeighbours(cell):
             if self.isInBoundary(neighbours) and self.isEmptyCell(neighbours):
                 return True
-        '''
-        l = self.getNeighbours(cell)
-        if len(l) > 0:
-            l = map(lambda x : self.isInBoundary(x) and self.isEmptyCell(x), l)
-            return sum(l) == len(l)
-        '''
 
     def isEmptyCell(self, cell):
         return self.occupancyGrid.getCell(cell[0], cell[1]) == 0.0
