@@ -3,10 +3,7 @@
 import rospy
 
 #from comp0037_explorer.explorer_node import ExplorerNode
-#from comp0037_explorer.explorer_node_closest import ExplorerNode
-#from comp0037_explorer.explorer_node_closest_backup import ExplorerNode
-from comp0037_explorer.explorer_node_closest_self import ExplorerNode
-#from comp0037_explorer.test_closest import ExplorerNode
+from comp0037_explorer.explorer_node_closest import ExplorerNode
 
 if __name__ == '__main__':
     try:

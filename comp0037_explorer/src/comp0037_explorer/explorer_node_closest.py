@@ -1,7 +1,9 @@
 import rospy
-from wavefront_detection import ExplorerNodeWavefrontBase
+from explorer_node_wave_front_detection_base import ExplorerNodeWaveFrontDetectionBase
 
-class ExplorerNode(ExplorerNodeWavefrontBase):
+# This class implements an explorer 
+# which picks the closest cell as the next destination.
+class ExplorerNode(ExplorerNodeWaveFrontDetectionBase):
 
     def __init__(self):
         ExplorerNodeWavefrontBase.__init__(self)
@@ -21,19 +23,14 @@ class ExplorerNode(ExplorerNodeWavefrontBase):
 
     def getClosestCell(self, frontierList):
         frontierDisInfo = self.getFrontiersDisInfo(frontierList)
-
-        # get the optimal cell. It gives low performance as well if the cell is too close
+        
         try:
-            candidate = [cell for dis,cell in frontierDisInfo \
-                if dis == min(filter(lambda d : d > 60, [dis for dis,cellCoords in frontierDisInfo]))]
-        except ValueError:
             candidate = [cell for dis,cell in frontierDisInfo \
                 if dis == min(filter(lambda d : d > 0.5, [dis for dis,cellCoords in frontierDisInfo]))]
-
-        try:
-            return candidate[0]
-        except IndexError:
+        except ValueError:
             return []
+
+        return candidate[0]
 
     # pick the closest one as the new destination
     def chooseNewDestination(self):

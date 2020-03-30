@@ -4,13 +4,10 @@ from explorer_node_base import ExplorerNodeBase
 
 from nav_msgs.msg import Odometry
 
-import random
-
 # Part 2.3
 
-# This class implements a frontier-based explorer using wave front detection 
-# and picking the closest frontier as the next waypoint.
-class ExplorerNodeWavefrontBase(ExplorerNodeBase):
+# This class is a base class implementing the wave front detection.
+class ExplorerNodeWaveFrontDetectionBase(ExplorerNodeBase):
 
     def __init__(self):
 
@@ -18,7 +15,7 @@ class ExplorerNodeWavefrontBase(ExplorerNodeBase):
 
         # to get self position for searching the frontiers
         self.searchStartCell = None # search start cell / current cell coords
-        self.pose = None
+        self.position = None
 
         # for wave frontier detection
         self.frontierList = []  
@@ -42,8 +39,8 @@ class ExplorerNodeWavefrontBase(ExplorerNodeBase):
         except AttributesError:
             return
         
-        pose = self.occupancyGrid.getCellCoordinatesFromWorldCoordinates((pos.x,pos.y))
-        self.pose = pose
+        self.position = self.occupancyGrid.getCellCoordinatesFromWorldCoordinates((pos.x,pos.y))
+        #self.position = position
     
     # if a goal is found unreachable, add it to the blacklist
     def destinationReached(self, goal, goalReached):
@@ -51,17 +48,15 @@ class ExplorerNodeWavefrontBase(ExplorerNodeBase):
             # print 'Adding ' + str(goal) + ' to the naughty step'
             self.blackList.append(goal)
 
-    # ---------- Wave Front Detection -----------
     def clearOldFrontiersInfo(self):
         rospy.loginfo("clearing old info")
         self.frontierList = []  
-    
-
-    def hasEmptyNeighbours(self,centerCell):
-        for cell in self.getNeighbours(centerCell):
-            if self.isInBoundary(cell) and \
+    '''
+    def isEmpty(self,cell):
+        if self.isInBoundary(cell) and \
                 self.occupancyGrid.getCell(cell[0],cell[1]) == 0:
                 return True
+    '''
 
     def isInBoundary(self, cell):
         width, height = self.occupancyGrid.getWidthInCells(), self.occupancyGrid.getHeightInCells()
@@ -70,9 +65,11 @@ class ExplorerNodeWavefrontBase(ExplorerNodeBase):
     def getNeighbours(self, centerCell):
         offset = [-1,0,1]
         offset2 = [[offsetX,offsetY] for offsetX in offset for offsetY in offset]
-        return [[centerCell[0] + offsetX, centerCell[1] + offsetY] \
+        l = [[centerCell[0] + offsetX, centerCell[1] + offsetY] \
                     for offsetX, offsetY in offset2 \
                         if not [offsetX, offsetY] == [0,0]]
+        l = filter(lambda x:self.isInBoundary(x),l)
+        return l
   
     # depth first search, starting with self position
     def searchFrontiers(self, searchStartCell, frontierList):
@@ -93,16 +90,14 @@ class ExplorerNodeWavefrontBase(ExplorerNodeBase):
             # found a frontier
             if self.isFrontierCell(currentCell[0], currentCell[1]):
 
-                # init to trace along hte frontiers
+                # init to trace along the frontiers
                 currentPotentialFrontier = currentCell
                 waitingPotentialFrontierList = [currentCell] 
-                visitedFrontiers = [] 
 
                 while len(waitingPotentialFrontierList) != 0:
                     currentPotentialFrontier = waitingPotentialFrontierList.pop(-1)
                     
                     if currentPotentialFrontier in visitedList or \
-                        currentPotentialFrontier in visitedFrontiers or\
                         currentPotentialFrontier in self.blackList:
                         continue
                     
@@ -110,17 +105,15 @@ class ExplorerNodeWavefrontBase(ExplorerNodeBase):
                         frontierList.append(currentPotentialFrontier)
 
                         for neighbours in self.getNeighbours(currentPotentialFrontier):
-                            if neighbours not in visitedFrontiers and neighbours not in visitedList:
+                            if neighbours not in visitedList:
                                 waitingPotentialFrontierList.append(neighbours)
                     
-                    visitedFrontiers.append(currentPotentialFrontier)
-                visitedList += visitedFrontiers
+                    visitedList.append(currentPotentialFrontier)
 
             # add target neighbours into waiting list
             for neighbours in self.getNeighbours(currentCell):
-                if neighbours not in waitingList and \
-                        neighbours not in visitedList and \
-                                self.hasEmptyNeighbours(currentCell) :
+                if neighbours not in waitingList and neighbours not in visitedList \
+                                        and self.isInBoundary(neighbours):  
                     waitingList.append(neighbours)
 
             visitedList.append(currentCell)
@@ -144,9 +137,9 @@ class ExplorerNodeWavefrontBase(ExplorerNodeBase):
     def checkSelfPosition(self):
         if not self.searchStartCell:
             self.searchStartCell = self.getArbitraryFreeCell()
-        if not self.pose:
-            self.pose = self.searchStartCell
-        return self.pose
+        if not self.position:
+            self.position = self.searchStartCell
+        return self.position
 
     # wave front detection, using the current self cell position as the search start cell
     def updateFrontiers(self):
