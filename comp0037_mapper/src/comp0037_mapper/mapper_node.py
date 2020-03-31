@@ -19,6 +19,8 @@ from comp0037_mapper.msg import MapUpdate
 from comp0037_mapper.srv import *
 from bresenhamalgorithm import bresenham
 
+import os
+
 # This class implements basic mapping capabilities. Given knowledge
 # about the robot's position and orientation, it processes laser scans
 # to produce a new occupancy grid. If this grid differs from the
@@ -335,9 +337,31 @@ class MapperNode(object):
 
         return mapUpdateMessage
 
+    
+    def calculateAndOutputEntropy(self):
+        l = [[x,y] for x in range(0, self.occupancyGrid.getWidthInCells()) \
+                    for y in range(0,self.occupancyGrid.getHeightInCells())]
+        unknownCellNum = len(filter(lambda xs: self.occupancyGrid.getCell(xs[0],xs[1]) == 0.5,l))
         
+        entropy = unknownCellNum * np.log(2)
+
+        # write into file
+        f = open('entropy_data_selfAlgo.txt','a+')
+        print >> f, str(entropy) + '\n'
+        rospy.loginfo("\n\n\n\noutput entropy" + str(entropy))
+        f.close()
+
     def run(self):
+        #init
+        f = open('entropy_data_baseline.txt','w')
+        f.close()
+        startT = rospy.get_time()
+
         while not rospy.is_shutdown():
+            if (rospy.get_time() - startT) > 5.0:
+                startT = rospy.get_time()
+                rospy.loginfo("5s pass, outpyt entropy")
+                self.calculateAndOutputEntropy()
             self.updateVisualisation()
             rospy.sleep(0.1)
         
