@@ -27,17 +27,13 @@
  Group: \texttt{Group L}\\
 }
 
-\date{}
+%\date{}
 
 \begin{document}
 
 \maketitle
 
 \captionsetup[figure]{labelformat={default},labelsep=period,name={Fig.}}
-
-
-% -------------------------------------------------------------------------------------------
-\section{Introduction [dai ding]} 
 
 % -------------------------------------------------------------------------------------------
 \section{Reactive Planner}
@@ -100,7 +96,7 @@ The result is shown in Fig.\ref{fig:result1} and Fig.\ref{fig:result2}.
 
 One approach for improving the performance is using a more efficient global planner to reduce the computational cost associated with re-planning. D*-Lite is one such algorithm that caches previous searches and update them only when we need to. It make use of the backwards search. The graph additionally contains a consistency condition. When the graph changes, such as due to an obstacle, the consistency condition is violated. A priority queue is then used to sort the effect of the failed condition on the path. The highest priority updates are committed first.
 
-
+\pagebreak
 % -------------------------------------------------------------------------------------------
 \section{Frontier-Based Exploration System}
 % ----------------
@@ -114,7 +110,7 @@ Two methods for identifying frontiers are wave front detection and fast frontier
 \subsection {The Exploration Algorithm Provided}
 The method provided finds frontiers by traverse all the cells on the occupancy grid each time. Once a frontier is found, it checks if it is in the blacklist. If not, it then calculates the distance between the cell and the centre of the leftmost boundary and see if its distance is smaller than the current smallest value.  Finally, the frontier with the smallest distance (to the centre of the left boundary of the grid) is chose to be the next destination.  
 
-This method is extremely slow since the standard cell to compare the distance is the centre of the left boundary and also there are three nested loops to be run for each time the function is called. Especially the former, setting the standard cell to the midpoint makes the robot shift around the horizontal symmetry axis line by line like a windshield wiper, which significantly increases the time used to explore the map. We have run around 20 times using this method and the total time used and the map coverage is averagely around 2400 seconds (40 minutes) and 78\%. 
+This method is extremely slow since the standard cell to compare the distance is the centre of the left boundary and also there are three nested loops to be run for each time the function is called. Especially the former, setting the standard cell to the midpoint makes the robot shift around the horizontal symmetry axis line by line, which significantly increases distance it needs to travel between two destinations and thus the time used to explore the map. The total time used and the map coverage is averagely around 1500 seconds (25 minutes) and 78\%. 
 
 % ----------------
 \subsection {Our Implementation}
@@ -122,14 +118,14 @@ We chose the wave front detection algorithm to implement. For choosing the next 
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.5]{graphs/part2-3/WaveFrontDetection.png}
+\includegraphics[scale=0.5]{graphs/part2/2-3/WaveFrontDetection.png}
 \caption{Wave Front Detection}
 \label{fig:waveFrontDetection}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.5]{graphs/part2-3/closest.png}
+\includegraphics[scale=0.5]{graphs/part2/2-3/closest.png}
 \caption{Closest Heuristic}
 \label{fig:closestHeuristic}
 \end{figure}
@@ -138,6 +134,7 @@ Specifically, we implement the wave front detection using two nested breadth fir
 
 As a result, the new algorithm takes around 30 minutes to explores the map with 78.24 \% coverage. 
 
+\pagebreak
 % -------------------------------------------------------------------------------------------
 \section{Integration of Our Planner and Exploration System}
 
@@ -157,9 +154,10 @@ See Fig.\ref{fig:result3} for the result. The coverage is  78.31\%.
 \label{fig:result3}
 \end{figure}
 
+\pagebreak
 % -------------------------------------------------------------------------------------------
 \section{Information-Theoretic Path Planning}
-
+% ----------------
 \subsection {Definition}
 In terms of path planning, the information theoritic approach picks the next waypoint which can reduce the uncertainty of map the most. One approach is using entropy, which based on the thermodynamic concept of irregularity, to assess the uncertainty. And to decide where to go, mutual entropy is used. In detail, it first pick a location and predict the observation. If it saw the observation, then update the map and check the effect on the map entropy. In our model where cells are either empty (0), unknown (0.5) and blocked (1), the entropy of a single cell is:
 
@@ -178,21 +176,38 @@ Where H(C|x) is the expected entropy  such that
 H(C|x)= \sum_{C}p_{C_{k}} (M) H(C|x, z(M))
 \end{align}
 Where x, z is the destination and observation
+% ----------------
+\subsection{Our Modification}
+In our model, we simply use the following equation to compute the entropy of the map once every 5 seconds of simulation time (the code is shown in Fig.\ref{fig:calculateEntropy}).
+\begin{equation}
+p_{c}(M) = |C_{U}|ln(2)
+\end{equation}
 
-\subsection{}
+\begin{figure}[H]
+\centering  
+\subfigure[]{
+\includegraphics[width=0.8\textwidth]{graphs/part4/4-2/1.png}}
+\subfigure[]{
+\includegraphics[width=0.8\textwidth]{graphs/part4/4-2/2.png}}
+\caption{Our Implementation}
+\label{fig:calculateEntropy}
+\end{figure}
 
-\subsection{}
+% ----------------
+\subsection{Performance Evaluation}
+As shown in the graph (Fig.\ref{fig:entropyGraph}), the two approach give similar performance with after 300 time steps (i.e, 1500 seconds after starting) the baseline algorithm outweigh the others, though theoretically the wave front detection should have a better performance. The total time to explore the map used by the two approaches (mentioned in the previous sections) also support that. We think the reason may be due to that the way we implement the detection approach makes the searching frontiers phase take too much time. Besides this main reason, during the exploration, we found that in most cases the robot will choose to go out of the initial room first instead of exploring the room corner. Then the robot has to re-enter the room later. In addition, we found that, since it will always pick the closest frontier, and whenever the robot reaches the destination, the search frontier phase will be called. As a result, even if the robot has not moved forward for a significant distance, the search algorithm has been called multiple times,  each time with a non-negligible cost. Based on our situation, we will suggest that the baseline algorithm is more effective.
 
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{graphs/part4/4-3/entropy.png}
+\caption{}
+\label{fig:entropyGraph}
+\end{figure}
+
+\pagebreak
 % -------------------------------------------------------------------------------------------
-\section{Conclusion [dai ding]}
 
-% -------------------------------------------------------------------------------------------
 \bibliographystyle{unsrt}  
-%\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
-%%% and comment out the ``thebibliography'' section.
-
-
-%%% Comment out this section when you \bibliography{references} is enabled.
 \begin{thebibliography}{1}
 
 
@@ -202,7 +217,7 @@ Where x, z is the destination and observation
 \newblock Frontier Based Exploration for Autonomous Robot
 \newblock {\em<https://arxiv.org/abs/1806.03581>}.
 
- \bibitem{}
+ \bibitem{2}
 Brian Yamauchi
 \newblock (1997)
 \newblock  A Frontier-Based Approach for Autonomous Exploration
@@ -213,6 +228,26 @@ Callum Rhodes; Cunjia Liu; Wen-Hua Chen
 \newblock (2019)
 \newblock An Information Theoretic Approach to Path Planning for Frontier Exploration
 \newblock {\em<https://www.researchgate.net/publication/331929185\_An\_Information\_Theoretic\_Approach\_to\_Path\_Planning\_for\_Frontier\_Exploration>}.
+
+ \bibitem{3}
+Steven M. LaValle
+\newblock (2006)
+\newblock Planning Algorithm
+\newblock {\em<http://planning.cs.uiuc.edu>}.
+
+ \bibitem{4}
+Matan Keidar; Gal A. Kaminka
+\newblock Efficient Frontier Detection for Robot Exploration
+\newblock Volume: 33 issue: 2
+\newblock page(s):215-236
+\newblock First published online: October 22, 2013
+\newblock Issue published: February 1, 2014
+
+ \bibitem{5}
+Robert M. Gray
+\newblock (2013)
+\newblock Entropy and Information Theory
+\newblock {\em<https://ee.stanford.edu/\~gray/it.pdf>}.
 
 
 
