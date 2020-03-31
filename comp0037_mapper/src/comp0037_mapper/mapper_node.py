@@ -337,7 +337,7 @@ class MapperNode(object):
 
         return mapUpdateMessage
 
-    
+    # Part 4.2
     def calculateAndOutputEntropy(self):
         l = [[x,y] for x in range(0, self.occupancyGrid.getWidthInCells()) \
                     for y in range(0,self.occupancyGrid.getHeightInCells())]

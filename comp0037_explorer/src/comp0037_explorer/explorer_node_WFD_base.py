@@ -26,7 +26,6 @@ class ExplorerNodeWFDBase(ExplorerNodeBase):
         
         self.current_pose_subscriber = rospy.Subscriber('/robot0/odom', Odometry, self.current_pose_callback)
    
-
     # pose callback to get self cell position
     def current_pose_callback(self, data):
 
@@ -53,7 +52,6 @@ class ExplorerNodeWFDBase(ExplorerNodeBase):
         rospy.loginfo("Clearing old frontier info")
 
         self.frontierList = []
-
 
     def isInBoundary(self, cell):
         width, height = self.occupancyGrid.getWidthInCells(), self.occupancyGrid.getHeightInCells()

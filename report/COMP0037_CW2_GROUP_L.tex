@@ -24,7 +24,8 @@
 
 
 \author{
- Group: \texttt{Group L}\\
+ Group: \texttt{Group L}\\\\
+ \textbf{Members:} \texttt{Yun Fang, Yusi Zhou}
 }
 
 %\date{}
@@ -110,7 +111,7 @@ Two methods for identifying frontiers are wave front detection and fast frontier
 \subsection {The Exploration Algorithm Provided}
 The method provided finds frontiers by traverse all the cells on the occupancy grid each time. Once a frontier is found, it checks if it is in the blacklist. If not, it then calculates the distance between the cell and the centre of the leftmost boundary and see if its distance is smaller than the current smallest value.  Finally, the frontier with the smallest distance (to the centre of the left boundary of the grid) is chose to be the next destination.  
 
-This method is extremely slow since the standard cell to compare the distance is the centre of the left boundary and also there are three nested loops to be run for each time the function is called. Especially the former, setting the standard cell to the midpoint makes the robot shift around the horizontal symmetry axis line by line, which significantly increases distance it needs to travel between two destinations and thus the time used to explore the map. The total time used and the map coverage is averagely around 1500 seconds (25 minutes) and 78\%. 
+This method is slow since the standard cell to compare the distance is the centre of the left boundary and also there are three nested loops to be run for each time the function is called. Especially the former, setting the standard cell to the midpoint makes the robot shift around the horizontal symmetry axis line by line, which significantly increases distance it needs to travel between two destinations and thus the time used to explore the map. The total time used and the map coverage is averagely around 1500 seconds (25 minutes) and 78\%. 
 
 % ----------------
 \subsection {Our Implementation}
@@ -150,7 +151,7 @@ See Fig.\ref{fig:result3} for the result. The coverage is  78.31\%.
 \includegraphics[width=0.45\textwidth]{graphs/part3/plannerSG.png}}
 \subfigure[Mapper Node Occupancy Grid]{
 \includegraphics[width=0.45\textwidth]{graphs/part3/mapperNodeOG.png}}
-\caption{Result on the second launch script}
+\caption{Result on the part 3 launch script}
 \label{fig:result3}
 \end{figure}
 
