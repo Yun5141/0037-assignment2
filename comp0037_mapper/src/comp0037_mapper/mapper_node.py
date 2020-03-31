@@ -353,7 +353,7 @@ class MapperNode(object):
 
     def run(self):
         #init
-        f = open('entropy_data_baseline.txt','w')
+        f = open('entropy_data_selfAlgo.txt','w')
         f.close()
         startT = rospy.get_time()
 
